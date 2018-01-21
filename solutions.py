@@ -5,14 +5,7 @@ Created on Sun Jan 14 19:29:11 2018
 @author: Alberto Rosario
 Udacity Technical Interview Practice solutions
 """
-from math import factorial
-from itertools import permutations
 
-### Helper functions
-
-# Removes all spaces from string and creates a list of each character
-def str_to_char_list(in_str):
-    return list(''.join(in_str.split()))
 
 """
 Question 1
@@ -21,6 +14,8 @@ of s. For example: if s = "udacity" and t = "ad",
 then the function returns True. Your function definition should look like: 
 question1(s, t) and return a boolean True or False.
 """
+from itertools import permutations
+
 def question1(s,t):
     try:
         if len(t) <= len(s) and len(t) > 0:
@@ -54,6 +49,7 @@ print "print question1(): " + str(question1(main_str, ''))
 
 print "print question1(): " + str(question1(main_str, None))
 # Expected output: print question1(): False
+
 
 """
 Question 2
