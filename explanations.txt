@@ -1,0 +1,13 @@
+"""
+Created on Sun Jan 14 19:29:11 2018
+
+@author: Alberto Rosario
+Udacity Technical Interview Practice explanations
+"""
+
+question 1:
+To quickly catch input errors without hurting efficiency too much, I decided to use a the if,else statement inside a try, catch.
+I also took advantage of the itertools.permutation to make a list, 'perm', of all possible variations of 'sub_str' so I can quickly iterate through 'perm' to see if any anagrams of 'sub_str' are in 'main_str'.
+The efficiency is approximatly O(n+4).
+
+question 2:
