@@ -64,7 +64,7 @@ def question2(a):
     in_err = ("Input Error. Please make sure to enter a string atleast 2 "
     "letters long. Spaces are not counted.")
     try:
-        no_p = "Sorry, no palindromes found in given string."
+        no_palindrome = "Sorry, no palindromes found in given string."
         if type(a) is str and len(a.split()) > 0:
             a = "".join(a.split()).lower()
             if a.find(a[::-1]) == 0:
@@ -74,25 +74,17 @@ def question2(a):
                 while k >= 3: # shortest word lengths to search for
                     s1 = 0
                     e1 = s1+k
-                    while s1 <= len(a)-k:
+                    while e1 <= len(a):
                         b = a[s1:e1]
-                        print b
-                        s2 = len(a)-2
-                        e2 = s2-k
-                        while s2 >= k:
-                            if b == a[s2:e2:-1]:
-                                print a[s2:e2:-1]
+                        if a[s1:e1] == b[::-1]:
                                 return True
-                            else:
-                                s2 -= 1
-                                e2 -= 1
                         else:
                             s1 += 1
                             e1 += 1
                     else:
                         k -= 1
                 else:
-                    return no_p
+                    return no_palindrome
         else:
             return in_err
     except:
@@ -113,7 +105,7 @@ print "print question2(): " + str(question2(test3))
 # Expected output: print question2(): Input Error. Please make sure to enter
 # a string atleast 2 letters long. Spaces are not counted.
 
-test4 = "x taco fcat z ada s"
+test4 = "x taco cat z ada s"
 print "print question2(): " + str(question2(test4))
 # Expected output: print question2(): tacocat
 
