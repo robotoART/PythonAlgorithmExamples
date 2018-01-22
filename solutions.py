@@ -107,16 +107,26 @@ print "print question2(): " + str(question2(test4))
 
 
 ### Helper functions for questions 3,4,5
+import heapq
+
 class Node(object):
     def __init__(self, value):
         self.value = value
         self.edges = []
+        self.visited = False
+        self.predecessor = None
 
 class Edge(object):
     def __init__(self, value, node_from, node_to):
         self.value = value
         self.node_from = node_from
         self.node_to = node_to
+        
+    def __cmp__(self, otherEdge):
+        return self.cmp(self.value, otherEdge.value)
+        
+    def __lt__(self, other):
+        return self.value < other.value
 
 class Graph(object):
     def __init__(self, nodes=[], edges=[]):
@@ -153,6 +163,13 @@ class Graph(object):
             edge_list.append(edge)
         return edge_list
         
+    def get_node_list(self):
+        node_list = []
+        for node_object in self.nodes:
+            node = (node_object.value, node_object.edges, node_object.visited, node_object.predecessor)
+            node_list.append(node)
+        return node_list
+        
     def get_adjacency_list(self):
         max_index = self.find_max_index()
         adjacency_list = [None] * (max_index + 1)
@@ -177,6 +194,29 @@ class Graph(object):
                 if node.value > max_index:
                     max_index = node.value
         return max_index
+
+class PrimsAlgorithm(object):
+    def __init__(self, unvisitedList):
+        self.unvisistedList = unvisitedList
+        self.spanningTree = []
+        self.edgeHeap = []
+        self.fullCost = 0
+        
+    def constructSpanningTree(self, node):
+        self.unvisistedList.remove(node)
+        while self.unvisistedList:
+            for edge in node.edges:
+                if edge.node_to in self.unvisistedList:
+                    heapq.heappush(self.edgeHeap, edge)
+            minEdge = heapq.heappop(self.edgeHeap)
+            self.spanningTree.append(minEdge)
+            print("Edge added to spanning tree %s : %s"%(minEdge.node_from.value, minEdge.node_to.value))
+            self.fullCost += minEdge.value
+            node = minEdge.node_to
+            self.unvisistedList.remove(node)
+                
+    def getSpanningTree(self):
+        return self.spanningTree
         
 ### End of helper functions
         
@@ -192,39 +232,40 @@ adjacency list structured like this:
  'C': [('B', 5)]}
 Vertices are represented as unique strings. 
 The function definition should be question3(G)
-"""              
+"""
 def question3(G):
-    try:
-        graph = Graph()
-        graph_items = G.items()
-        graph_keys = sorted(G.keys())
-        graph_sorted_items = sorted(G.items())
-        for i in graph_sorted_items:
-            graph.insert_node(graph_sorted_items.index(i))
-            for e in i[1]:
-                graph.insert_edge(e[1], graph_sorted_items.index(i),
-                                  graph_keys.index(e[0]))
-##works        #print graph.get_adjacency_list()
-##works        #print graph.insert_node()
-##works        #print graph.insert_edge()
-##works        #print graph.get_edge_list()
-##works        #print graph.get_adjacency_matrix()
-##works        #print graph.find_max_index()
-        return "to_do_still"
-    except:
-        print "Input error. Please make sure graph is correctly formatted."
-        return
+#    try:
+    if type(G) != dict:
+        return "Input type Error. Please input a dictionary."
+    if len(G) < 2:
+        return "Input length Error. Please input a dictionary with 2 or more edges"
+    graph = Graph()
+    graph_keys = sorted(G.keys())
+    graph_sorted_items = sorted(G.items())
+    for i in graph_sorted_items:
+        graph.insert_node(graph_sorted_items.index(i))
+        for e in i[1]:
+            graph.insert_edge(e[1], graph_sorted_items.index(i),
+                              graph_keys.index(e[0]))
+
+    min_span_tree = PrimsAlgorithm(graph.nodes)
+    min_span_tree.constructSpanningTree(graph.nodes[0])
+    return "to_do_still"
+#    except:
+#        print "Input error. Please make sure graph is correctly formatted."
+#        return
 
 print "\n #3"
 test1 = {
-'A': [('B', 2)],
+'A': [('B', 2), ('D', 1)],
 'B': [('A', 2), ('C', 5)], 
-'C': [('B', 5)]}
+'C': [('B', 5), ('D', 8)],
+'D': [('C', 8), ('A', 1)]      }
 print "print question3(test1):" 
 print question3(test1)
 # Expected output:
 # print question3():
-# to_do
+# {'A': [('D', 1)], 'B': [('A', 2)], 'C': [('B', 5)], 'D'[('A', 1)]}
 
 
 """
