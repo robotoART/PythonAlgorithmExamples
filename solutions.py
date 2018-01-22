@@ -73,7 +73,7 @@ def question2(a):
                     while e1 <= len(a):
                         b = a[s1:e1]
                         if a[s1:e1] == b[::-1]:
-                                return True
+                            return b
                         else:
                             s1 += 1
                             e1 += 1
@@ -106,6 +106,80 @@ print "print question2(): " + str(question2(test4))
 # Expected output: print question2(): tacocat
 
 
+### Helper functions for questions 3,4,5
+class Node(object):
+    def __init__(self, value):
+        self.value = value
+        self.edges = []
+
+class Edge(object):
+    def __init__(self, value, node_from, node_to):
+        self.value = value
+        self.node_from = node_from
+        self.node_to = node_to
+
+class Graph(object):
+    def __init__(self, nodes=[], edges=[]):
+        self.nodes = nodes
+        self.edges = edges
+
+    def insert_node(self, new_node_val):
+        new_node = Node(new_node_val)
+        self.nodes.append(new_node)
+        
+    def insert_edge(self, new_edge_val, node_from_val, node_to_val):
+        from_found = None
+        to_found = None
+        for node in self.nodes:
+            if node_from_val == node.value:
+                from_found = node
+            if node_to_val == node.value:
+                to_found = node
+        if from_found == None:
+            from_found = Node(node_from_val)
+            self.nodes.append(from_found)
+        if to_found == None:
+            to_found = Node(node_to_val)
+            self.nodes.append(to_found)
+        new_edge = Edge(new_edge_val, from_found, to_found)
+        from_found.edges.append(new_edge)
+        to_found.edges.append(new_edge)
+        self.edges.append(new_edge)
+    
+    def get_edge_list(self):
+        edge_list = []
+        for edge_object in self.edges:
+            edge = (edge_object.value, edge_object.node_from.value, edge_object.node_to.value)
+            edge_list.append(edge)
+        return edge_list
+        
+    def get_adjacency_list(self):
+        max_index = self.find_max_index()
+        adjacency_list = [None] * (max_index + 1)
+        for edge_object in self.edges:
+            if adjacency_list[edge_object.node_from.value]:
+                adjacency_list[edge_object.node_from.value].append((edge_object.node_to.value, edge_object.value))
+            else:
+                adjacency_list[edge_object.node_from.value] = [(edge_object.node_to.value, edge_object.value)]
+        return adjacency_list
+
+    def get_adjacency_matrix(self):
+        max_index = self.find_max_index()
+        adjacency_matrix = [[0 for i in range(max_index + 1)] for j in range(max_index + 1)]
+        for edge_object in self.edges:
+            adjacency_matrix[edge_object.node_from.value][edge_object.node_to.value] = edge_object.value
+        return adjacency_matrix
+    
+    def find_max_index(self):
+        max_index = -1
+        if len(self.nodes):
+            for node in self.nodes:
+                if node.value > max_index:
+                    max_index = node.value
+        return max_index
+        
+### End of helper functions
+        
 """
 Question 3
 Given an undirected graph G, find the minimum spanning tree within G. 
@@ -118,7 +192,39 @@ adjacency list structured like this:
  'C': [('B', 5)]}
 Vertices are represented as unique strings. 
 The function definition should be question3(G)
-"""
+"""              
+def question3(G):
+    try:
+        graph = Graph()
+        graph_items = G.items()
+        graph_keys = sorted(G.keys())
+        graph_sorted_items = sorted(G.items())
+        for i in graph_sorted_items:
+            graph.insert_node(graph_sorted_items.index(i))
+            for e in i[1]:
+                graph.insert_edge(e[1], graph_sorted_items.index(i),
+                                  graph_keys.index(e[0]))
+##works        #print graph.get_adjacency_list()
+##works        #print graph.insert_node()
+##works        #print graph.insert_edge()
+##works        #print graph.get_edge_list()
+##works        #print graph.get_adjacency_matrix()
+##works        #print graph.find_max_index()
+        return "to_do_still"
+    except:
+        print "Input error. Please make sure graph is correctly formatted."
+        return
+
+print "\n #3"
+test1 = {
+'A': [('B', 2)],
+'B': [('A', 2), ('C', 5)], 
+'C': [('B', 5)]}
+print "print question3(test1):" 
+print question3(test1)
+# Expected output:
+# print question3():
+# to_do
 
 
 """
