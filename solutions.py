@@ -5,7 +5,7 @@ Created on Sun Jan 14 19:29:11 2018
 @author: Alberto Rosario
 Udacity Technical Interview Practice solutions
 """
-
+import sys
 
 """
 Question 1
@@ -105,125 +105,6 @@ test4 = "x taco cat z ada s"
 print "print question2(): " + str(question2(test4))
 # Expected output: print question2(): tacocat
 
-
-### Helper functions for questions 3,4,5
-import heapq
-import sys
-
-class Node(object):
-    def __init__(self, value):
-        self.value = value
-        self.edges = []
-        self.visited = False
-        self.predecessor = None
-
-class Edge(object):
-    def __init__(self, value, node_from, node_to):
-        self.value = value
-        self.node_from = node_from
-        self.node_to = node_to
-        
-    def __cmp__(self, otherEdge):
-        return self.cmp(self.value, otherEdge.value)
-        
-    def __lt__(self, other):
-        return self.value < other.value
-
-class Graph(object):
-    def __init__(self, nodes=[], edges=[]):
-        self.nodes = nodes
-        self.edges = edges
-
-    def insert_node(self, new_node_val):
-        new_node = Node(new_node_val)
-        self.nodes.append(new_node)
-            
-    def append_self_edge(self, new_edge_val, node_from_val, node_to_val):
-        new_edge = Edge(new_edge_val, node_from_val, node_to_val)
-        self.edges.append(new_edge)
-        self.nodes[node_from_val].edges.append(new_edge)
-                
-    def insert_edge(self, new_edge_val, node_from_val, node_to_val):
-        from_found = None
-        to_found = None
-        for node in self.nodes:
-            if node_from_val == node.value:
-                from_found = node
-            if node_to_val == node.value:
-                to_found = node
-        if from_found == None:
-            from_found = Node(node_from_val)
-            self.nodes.append(from_found)
-        if to_found == None:
-            to_found = Node(node_to_val)
-            self.nodes.append(to_found)
-        new_edge = Edge(new_edge_val, from_found, to_found)
-        from_found.edges.append(new_edge)
-        to_found.edges.append(new_edge)
-        self.edges.append(new_edge)
-    
-    def get_edge_list(self):
-        edge_list = []
-        for edge_object in self.edges:
-            edge = (edge_object.value, edge_object.node_from.value, edge_object.node_to.value)
-            edge_list.append(edge)
-        return edge_list
-        
-    def get_node_list(self):
-        node_list = []
-        for node_object in self.nodes:
-            node_list.append(node_object)
-        return node_list
-        
-    def get_adjacency_list(self):
-        max_index = self.find_max_index()
-        adjacency_list = [None] * (max_index + 1)
-        for edge_object in self.edges:
-            if adjacency_list[edge_object.node_from.value]:
-                adjacency_list[edge_object.node_from.value].append((edge_object.node_to.value, edge_object.value))
-            else:
-                adjacency_list[edge_object.node_from.value] = [(edge_object.node_to.value, edge_object.value)]
-        return adjacency_list
-
-    def get_adjacency_matrix(self):
-        max_index = self.find_max_index()
-        adjacency_matrix = [[0 for i in range(max_index + 1)] for j in range(max_index + 1)]
-        for edge_object in self.edges:
-            adjacency_matrix[edge_object.node_from.value][edge_object.node_to.value] = edge_object.value
-        return adjacency_matrix
-    
-    def find_max_index(self):
-        max_index = -1
-        if len(self.nodes):
-            for node in self.nodes:
-                if node.value > max_index:
-                    max_index = node.value
-        return max_index
-
-class PrimsAlgorithm(object):
-    def __init__(self, unvisitedList):
-        self.unvisistedList = unvisitedList
-        self.spanningTree = []
-        self.edgeHeap = []
-        self.fullCost = 0
-        
-    def constructSpanningTree(self, node):
-        self.unvisistedList.remove(node)
-        while self.unvisistedList:
-            for edge in node.edges:
-                if edge.node_to in self.unvisistedList:
-                    heapq.heappush(self.edgeHeap, edge)
-            minEdge = heapq.heappop(self.edgeHeap)
-            self.spanningTree.append(minEdge)
-            print("Edge added to spanning tree %s : %s"%(minEdge.node_from, minEdge.node_to))
-            self.fullCost += minEdge.value
-            node = minEdge.node_to
-            self.unvisistedList.remove(node)
-                
-    def getSpanningTree(self):
-        return self.spanningTree
-        
-### End of helper functions
         
 """
 Question 3
@@ -266,12 +147,7 @@ def question3(G):
         # remove current visited tree node from Que list
         nodes_Que_list.remove(tru_sm_tree_nod)
         tree_nodes_Q.pop(tru_sm_tree_nod)
-    print tree_nodes_Q
-    ### MST dictionary creation
-#    print list(G.items())
-    print sorted(mst_list)
-    mst_dict = dict(mst_list)
-    return mst_dict
+    return sorted(mst_list)
 
 print "\n #3"
 test1 = {
@@ -283,7 +159,34 @@ print "print question3(test1):"
 print question3(test1)
 # Expected output:
 # print question3():
-# {'A': [('D', 1)], 'B': [('A', 2)], 'C': [('B', 5)], 'D'[('A', 1)]}
+# {'A': [('B', 2)], 'B': [('C', 5)], 'C': [('B', 5)], 'D'[('A', 1)]}
+
+test2 = {
+'A': [('B', 2), ('D', 1)],
+'B': [('A', 2), ('C', 5)], 
+'C': [('B', 5), ('D', 8)],
+'D': [('C', 8), ('A', 1)],
+'F': [('A', 9), ('B', 2), ('D', 4)],
+'G': [('C', 3), ('F', 1)]}
+print "print question3(test2):" 
+print question3(test2)
+# Expected output:
+# print question3():
+# {'A': [('B', 2)], 'B': [('C', 5)], 'C': [('B', 5)], 'D'[('A', 1)]}
+
+test3 = ""
+print "print question3(test3):" 
+print question3(test3)
+# Expected output:
+# print question3():
+# Input type Error. Please input a dictionary.
+
+test4 = {}
+print "print question3(test3):" 
+print question3(test4)
+# Expected output:
+# print question3():
+# Input length Error. Please input a dictionary with 2 or more edges
 
 
 """
@@ -311,7 +214,9 @@ question4([[0, 1, 0, 0, 0],
           4)
 and the answer would be 3.
 """
-
+def question4():
+    return
+    
 
 """
 Question 5
@@ -327,3 +232,11 @@ class Node(object):
     self.data = data
     self.next = None
 """
+class Node(object):
+  def __init__(self, data):
+    self.data = data
+    self.next = None
+    
+def question5():
+    return
+    
