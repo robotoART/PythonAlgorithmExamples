@@ -108,6 +108,7 @@ print "print question2(): " + str(question2(test4))
 
 ### Helper functions for questions 3,4,5
 import heapq
+import sys
 
 class Node(object):
     def __init__(self, value):
@@ -136,7 +137,12 @@ class Graph(object):
     def insert_node(self, new_node_val):
         new_node = Node(new_node_val)
         self.nodes.append(new_node)
-        
+            
+    def append_self_edge(self, new_edge_val, node_from_val, node_to_val):
+        new_edge = Edge(new_edge_val, node_from_val, node_to_val)
+        self.edges.append(new_edge)
+        self.nodes[node_from_val].edges.append(new_edge)
+                
     def insert_edge(self, new_edge_val, node_from_val, node_to_val):
         from_found = None
         to_found = None
@@ -166,8 +172,7 @@ class Graph(object):
     def get_node_list(self):
         node_list = []
         for node_object in self.nodes:
-            node = (node_object.value, node_object.edges, node_object.visited, node_object.predecessor)
-            node_list.append(node)
+            node_list.append(node_object)
         return node_list
         
     def get_adjacency_list(self):
@@ -210,7 +215,7 @@ class PrimsAlgorithm(object):
                     heapq.heappush(self.edgeHeap, edge)
             minEdge = heapq.heappop(self.edgeHeap)
             self.spanningTree.append(minEdge)
-            print("Edge added to spanning tree %s : %s"%(minEdge.node_from.value, minEdge.node_to.value))
+            print("Edge added to spanning tree %s : %s"%(minEdge.node_from, minEdge.node_to))
             self.fullCost += minEdge.value
             node = minEdge.node_to
             self.unvisistedList.remove(node)
@@ -239,18 +244,57 @@ def question3(G):
         return "Input type Error. Please input a dictionary."
     if len(G) < 2:
         return "Input length Error. Please input a dictionary with 2 or more edges"
-    graph = Graph()
-    graph_keys = sorted(G.keys())
-    graph_sorted_items = sorted(G.items())
-    for i in graph_sorted_items:
-        graph.insert_node(graph_sorted_items.index(i))
-        for e in i[1]:
-            graph.insert_edge(e[1], graph_sorted_items.index(i),
-                              graph_keys.index(e[0]))
-
-    min_span_tree = PrimsAlgorithm(graph.nodes)
-    min_span_tree.constructSpanningTree(graph.nodes[0])
-    return "to_do_still"
+#    graph = Graph()
+    graph_keys = sorted(G.keys()) # list of just the key string names
+    # graph_sorted_items: [('A', [('B', 2), ('D', 1)]), ..., ('n', [('B', 2), ('D', 1)])]
+#    graph_sorted_items = sorted(G.items())
+#    for i in graph_keys:
+#        graph.insert_node(graph_keys.index(i))
+#    for k in G.keys():
+#        for e in G.get(k):
+#            graph.append_self_edge(e[1], graph_keys.index(k), graph_keys.index(e[0]))
+                              
+    ### begin MST creation
+    nodes_Que_list = sorted(G.keys()) # list has [str of each node name]
+    # initialize tree_nodes_Q
+    tree_nodes_Q = {} # is Q
+    for n in graph_keys: # must be each node in GRAPH
+        tree_nodes_Q[n] = [sys.maxint, None] # [name]:[weight,from_node]
+    tree_nodes_Q['A'] = [0, None] # set MST root node
+    while len(nodes_Que_list) != 0:
+        sm_tree_n_weight = min(tree_nodes_Q.values(), key=lambda x: x[1]) # value of smallest weight in tree_nodes_Q
+        small_tree_node = [key for key, value in tree_nodes_Q.iteritems() if value == sm_tree_n_weight][0]
+        adj_edges_dict = dict(G.get(small_tree_node)) # adjacent edges of smallest tree node
+        # remove current visited tree node from Que list
+        nodes_Que_list.remove(small_tree_node)
+        # if small tree node parent not None ... todo
+        if tree_nodes_Q.get(small_tree_node)[1] != None:
+            print "Hmm"
+        for n in adj_edges_dict.items(): # n is (str_name, int_weight)
+            if tree_nodes_Q.has_key(n[0]) and n[1] < int(tree_nodes_Q.get(n[0])[0]):
+                tree_nodes_Q[n[0]] = [n[1], small_tree_node]
+        print "Getting closer"
+        tree_nodes_Q.pop(small_tree_node)
+#        print tree_nodes_Q
+    print tree_nodes_Q
+#    print tree_nodes_Q
+#    print graph.nodes[0].edges
+#    print graph.edges
+#    print graph.get_edge_list()
+#    print graph_sorted_items
+#    print graph_keys
+#    for i in graph_sorted_items: #good-works
+#        min_span_tree.update([i])
+#    #bad#min_span_tree.update([graph_sorted_items])
+#    print graph.get_node_list()[0].edges
+#    print graph.get_node_list() # contains list of node objects in graph
+#    for e in graph.get_node_list():
+##        print e[0].node_from.value
+#        print e
+#    prims_min_span_tree = PrimsAlgorithm(graph.nodes)
+#    prims_min_span_tree.constructSpanningTree(graph.nodes[0])
+    min_span_tree = {}
+    return min_span_tree
 #    except:
 #        print "Input error. Please make sure graph is correctly formatted."
 #        return
@@ -260,7 +304,7 @@ test1 = {
 'A': [('B', 2), ('D', 1)],
 'B': [('A', 2), ('C', 5)], 
 'C': [('B', 5), ('D', 8)],
-'D': [('C', 8), ('A', 1)]      }
+'D': [('C', 8), ('A', 1)]}
 print "print question3(test1):" 
 print question3(test1)
 # Expected output:
