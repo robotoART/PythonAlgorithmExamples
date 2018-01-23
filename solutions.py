@@ -239,65 +239,39 @@ Vertices are represented as unique strings.
 The function definition should be question3(G)
 """
 def question3(G):
-#    try:
     if type(G) != dict:
         return "Input type Error. Please input a dictionary."
     if len(G) < 2:
         return "Input length Error. Please input a dictionary with 2 or more edges"
-#    graph = Graph()
-    graph_keys = sorted(G.keys()) # list of just the key string names
-    # graph_sorted_items: [('A', [('B', 2), ('D', 1)]), ..., ('n', [('B', 2), ('D', 1)])]
-#    graph_sorted_items = sorted(G.items())
-#    for i in graph_keys:
-#        graph.insert_node(graph_keys.index(i))
-#    for k in G.keys():
-#        for e in G.get(k):
-#            graph.append_self_edge(e[1], graph_keys.index(k), graph_keys.index(e[0]))
-                              
-    ### begin MST creation
+    # queing the nodes setup
     nodes_Que_list = sorted(G.keys()) # list has [str of each node name]
     # initialize tree_nodes_Q
     tree_nodes_Q = {} # is Q
-    for n in graph_keys: # must be each node in GRAPH
+    for n in G.keys(): # must be each node in GRAPH
         tree_nodes_Q[n] = [sys.maxint, None] # [name]:[weight,from_node]
-    tree_nodes_Q['A'] = [0, None] # set MST root node
+    tree_nodes_Q['A'] = [0, None] # set MST root node    
+    ### begin finding MST edges
+    mst_list = []
     while len(nodes_Que_list) != 0:
-        sm_tree_n_weight = min(tree_nodes_Q.values(), key=lambda x: x[1]) # value of smallest weight in tree_nodes_Q
-        small_tree_node = [key for key, value in tree_nodes_Q.iteritems() if value == sm_tree_n_weight][0]
-        adj_edges_dict = dict(G.get(small_tree_node)) # adjacent edges of smallest tree node
-        # remove current visited tree node from Que list
-        nodes_Que_list.remove(small_tree_node)
+        indx_sm_node_w = [x[1][0] for x in tree_nodes_Q.items()].index(min([x[1][0] for x in tree_nodes_Q.items()]))
+        tru_sm_tree_nod = tree_nodes_Q.items()[indx_sm_node_w][0]
+        adj_edges_dict = dict(G.get(tru_sm_tree_nod)) # adjacent edges of smallest tree node
         # if small tree node parent not None ... todo
-        if tree_nodes_Q.get(small_tree_node)[1] != None:
-            print "Hmm"
+        if tree_nodes_Q.get(tru_sm_tree_nod)[1] != None:
+            mst_list.append((tree_nodes_Q.get(tru_sm_tree_nod)[1], (tru_sm_tree_nod, tree_nodes_Q.get(tru_sm_tree_nod)[0])))
+            mst_list.append((tru_sm_tree_nod, (tree_nodes_Q.get(tru_sm_tree_nod)[1], tree_nodes_Q.get(tru_sm_tree_nod)[0])))
         for n in adj_edges_dict.items(): # n is (str_name, int_weight)
             if tree_nodes_Q.has_key(n[0]) and n[1] < int(tree_nodes_Q.get(n[0])[0]):
-                tree_nodes_Q[n[0]] = [n[1], small_tree_node]
-        print "Getting closer"
-        tree_nodes_Q.pop(small_tree_node)
-#        print tree_nodes_Q
+                tree_nodes_Q[n[0]] = [n[1], tru_sm_tree_nod]
+        # remove current visited tree node from Que list
+        nodes_Que_list.remove(tru_sm_tree_nod)
+        tree_nodes_Q.pop(tru_sm_tree_nod)
     print tree_nodes_Q
-#    print tree_nodes_Q
-#    print graph.nodes[0].edges
-#    print graph.edges
-#    print graph.get_edge_list()
-#    print graph_sorted_items
-#    print graph_keys
-#    for i in graph_sorted_items: #good-works
-#        min_span_tree.update([i])
-#    #bad#min_span_tree.update([graph_sorted_items])
-#    print graph.get_node_list()[0].edges
-#    print graph.get_node_list() # contains list of node objects in graph
-#    for e in graph.get_node_list():
-##        print e[0].node_from.value
-#        print e
-#    prims_min_span_tree = PrimsAlgorithm(graph.nodes)
-#    prims_min_span_tree.constructSpanningTree(graph.nodes[0])
-    min_span_tree = {}
-    return min_span_tree
-#    except:
-#        print "Input error. Please make sure graph is correctly formatted."
-#        return
+    ### MST dictionary creation
+#    print list(G.items())
+    print sorted(mst_list)
+    mst_dict = dict(mst_list)
+    return mst_dict
 
 print "\n #3"
 test1 = {
