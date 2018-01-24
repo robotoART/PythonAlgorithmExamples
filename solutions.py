@@ -39,15 +39,15 @@ print "\n #1"
 main_str = "fastest"
 sub_str = "rtakljkljklj"
 
-print "print question1(): " + str(question1(main_str, sub_str))
+print "print question1(test1): " + str(question1(main_str, sub_str))
 # Expected output: print question1(): False
 
-print "print question1(): " + str(question1(main_str, ''))
+print "print question1(test2): " + str(question1(main_str, ''))
 # Expected output: print question1(): False 
 # Input error. Please input a string type, and make sure it is smaller than or
 # equal to in length as the main string.
 
-print "print question1(): " + str(question1(main_str, None))
+print "print question1(test3): " + str(question1(main_str, None))
 # Expected output: print question1(): False
 
 
@@ -66,8 +66,8 @@ def question2(a):
             if a.find(a[::-1]) == 0:
                 return a[::-1]
             else:
-                k = len(a)-2 # start length of words to search for
-                while k >= 3: # shortest word lengths to search for
+                k = len(a)-2 # start with longest length of words to search for
+                while k >= 3: # shortest word lengths to search for 
                     s1 = 0
                     e1 = s1+k
                     while e1 <= len(a):
@@ -88,21 +88,21 @@ def question2(a):
 
 print "\n #2"
 test1 = "Taco Cat"
-print "print question2(): " + str(question2(test1))
+print "print question2(test1): " + str(question2(test1))
 # Expected output: print question2(): tacocat
 
 test2 = "   "
-print "print question2(): " + str(question2(test2))
+print "print question2(test2): " + str(question2(test2))
 # Expected output: print question2(): Input Error. Please make sure to enter
 # a string atleast 2 letters long. Spaces are not counted.
 
 test3 = None
-print "print question2(): " + str(question2(test3))
+print "print question2(test3): " + str(question2(test3))
 # Expected output: print question2(): Input Error. Please make sure to enter
 # a string atleast 2 letters long. Spaces are not counted.
 
 test4 = "x taco cat z ada s"
-print "print question2(): " + str(question2(test4))
+print "print question2(test4): " + str(question2(test4))
 # Expected output: print question2(): tacocat
 
         
@@ -182,7 +182,7 @@ print question3(test3)
 # Input type Error. Please input a dictionary.
 
 test4 = {}
-print "print question3(test3):" 
+print "print question3(test4):" 
 print question3(test4)
 # Expected output:
 # print question3():
@@ -214,9 +214,140 @@ question4([[0, 1, 0, 0, 0],
           4)
 and the answer would be 3.
 """
-def question4():
-    return
+### Question 4 Helpers
+class BST_Node(object):
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+class Build_BST(object):
+    def __init__(self, root):
+        self.root = BST_Node(root)
+        
+    def insert(self,new_val):
+        self.insert_helper(self.root, new_val)
+        
+    def insert_helper(self, current, new_val):
+        if current.value < new_val:
+            if current.right:
+                self.insert_helper(current.right, new_val)
+            else:
+                current.right = BST_Node(new_val)
+        else:
+            if current.left:
+                self.insert_helper(current.left, new_val)
+            else:
+                current.left = BST_Node(new_val)
+                
+    def search(self, find_val):
+        return self.search_helper(self.root, find_val)
+
+    def search_helper(self, current, find_val):
+        if current:
+            if current.value == find_val:
+                return True
+            elif current.value < find_val:
+                return self.search_helper(current.right, find_val)
+            else:
+                return self.search_helper(current.left, find_val)
+        return False
+
+def get_LCA(bst_root, n1, n2):
+#    print "Check current bst_root"
+#    print bst_root.value
+    if bst_root is None:
+        return None
+    # Look in left of bst if n1 and n2 are smaller than root
+    if(bst_root.value > n1 and bst_root.value > n2):
+        return get_LCA(bst_root.left, n1, n2)
+
+   # Look in right of bst if n1 and n2 are larger than root 
+    if(bst_root.value < n1 and bst_root.value < n2):
+        return get_LCA(bst_root.right, n1, n2)
+        
+    return bst_root.value
     
+### End of Q4 Helpers
+
+def question4(T, r, n1, n2):
+#    print "step uno, prep BST with Root"
+    bst = Build_BST(r)
+#    print bst.root.value
+#    print "step dos, Insert children in as given"
+    current_child = 0
+    for child in T[r]:
+        if child == 1:
+            bst.insert(current_child)
+            current_child += 1
+        current_child += 1
+    
+    rollcall = 0 # current child node number to properly feed BST
+#    print "ROLLCALL!"
+    while rollcall <= len(T)-1:
+#        print rollcall
+#        print "len(T)-1"
+#        print len(T)-1
+        node_val = 0
+        for node in T:
+            if rollcall != r:
+                if node[rollcall] == 1:
+                    bst.insert(node_val)
+                node_val += 1
+        rollcall += 1
+    # "Now, what's the LCA in the BST?"
+    this_LCA = get_LCA(bst.root, n1, n2)
+#    print "Take a closer look at the BST node 3"
+#    print bst.root.left.right.value
+#    print bst.search(3)
+    return this_LCA
+
+print "\n #4"
+print "question4(test1): The LCA of 1 and 4 is,..."
+# Test 1:         0  1  2  3  4
+print question4([[0, 1, 0, 0, 0], # 0
+                 [0, 0, 0, 0, 0], # 1
+                 [0, 0, 0, 0, 0], # 2
+                 [1, 0, 0, 0, 1], # 3
+                 [0, 0, 0, 0, 0]], # 4 
+                 3, 1, 4)
+# the answer should be 3.
+
+print "question4(test2): The LCA of 2 and 4 is,..."
+# Test 2:         0  1  2  3  4  5  6
+print question4([[0, 0, 0, 0, 0, 0, 0], # 0
+                 [1, 0, 0, 1, 0, 0, 0], # 1
+                 [0, 0, 0, 0, 0, 0, 0], # 2
+                 [0, 0, 1, 0, 1, 0, 0], # 3
+                 [0, 0, 0, 0, 0, 0, 0], # 4
+                 [0, 1, 0, 0, 0, 0, 1], # 5
+                 [0, 0, 0, 0, 0, 0, 0]], # 6 
+                 5, 2, 4)
+# the answer should be 3.
+
+print "question4(test3): The LCA of 1 and 4 is,..."
+# Test 3:         0  1  2  3  4  5  6
+print question4([[0, 0, 0, 0, 0, 0, 0], # 0
+                 [1, 0, 0, 1, 0, 0, 0], # 1
+                 [0, 0, 0, 0, 0, 0, 0], # 2
+                 [0, 0, 1, 0, 1, 0, 0], # 3
+                 [0, 0, 0, 0, 0, 0, 0], # 4
+                 [0, 1, 0, 0, 0, 0, 1], # 5
+                 [0, 0, 0, 0, 0, 0, 0]], # 6 
+                 5, 4, 1)
+# the answer should be 1.
+
+print "question4(test4): The LCA of 2 and 6 is,..."
+# Test 4:         0  1  2  3  4  5  6
+print question4([[0, 0, 0, 0, 0, 0, 0], # 0
+                 [1, 0, 0, 1, 0, 0, 0], # 1
+                 [0, 0, 0, 0, 0, 0, 0], # 2
+                 [0, 0, 1, 0, 1, 0, 0], # 3
+                 [0, 0, 0, 0, 0, 0, 0], # 4
+                 [0, 1, 0, 0, 0, 0, 1], # 5
+                 [0, 0, 0, 0, 0, 0, 0]], # 6 
+                 5, 2, 6)
+# the answer should be 5.
 
 """
 Question 5
@@ -237,6 +368,6 @@ class Node(object):
     self.data = data
     self.next = None
     
-def question5():
+def question5(ll, m):
     return
     

@@ -20,6 +20,8 @@ I chose Prim's Algorithm because I had never tried to implement it before and it
 My solution has an approximate efficiency O(n logn)
 
 Question 4:
-
+Decided to implement a slightly modified version of the Node() and BST() classes.
+Also created a helper function to retrieve the LCA from the BST.
+This solution is of the efficiency of about O(logn)
 
 Question 5:
