@@ -363,11 +363,93 @@ class Node(object):
     self.data = data
     self.next = None
 """
+### Q5 Helpers
+# Node creation helper class
 class Node(object):
   def __init__(self, data):
     self.data = data
     self.next = None
+
+# Helper class to create a linked list
+class LinkedList(object):
+    def __init__(self):
+        self.head = None
+        self.last = None
+        return
+        
+    def append(self, new_element):
+        current = self.head
+        if self.head:
+            while current.next:
+                current = current.next
+            current.next = new_element
+            self.last = new_element
+        else:
+            self.head = new_element
+            self.last = new_element
+        
+    def get_position(self, position):
+        counter = 1
+        current = self.head
+        if position < 1:
+            return None
+        while current and counter <= position:
+            if counter == position:
+                return current
+            current = current.next
+            counter += 1
+        return None
     
+    # Function to get how many nodes are in the linked list
+    def size(self):
+        qty = 0
+        current = self.head
+        while current is not None:
+            qty += 1
+            current = current.next
+        return qty
+        
+    def insert(self, new_element, position):
+        counter = 1
+        current = self.head
+        if position > 1:
+            while current and counter < position:
+                if counter == position - 1:
+                    new_element.next = current.next
+                    current.next = new_element
+                current = current.next
+                counter += 1
+        elif position == 1:
+            new_element.next = self.head
+            self.head = new_element
+        
+    # Function to get data of mth element from the end
+#    def get_from_end(self, position):
+#        current = self.head
+#        while 
+
+# Test Nodes
+n1 = Node(1)
+n2 = Node(2)
+n3 = Node(3)
+n4 = Node(4)
+n5 = Node(5)
+
+### End of Q5 Helpers
+
 def question5(ll, m):
-    return
     
+#    m_postition = ll_test.get_position(ll.data)
+    return
+
+print "\n #5"
+print "question5(test1):"
+# Test 1:
+ll_test = LinkedList(n1)
+ll_test.append(n2)
+ll_test.append(n5)
+ll_test.append(n3)
+ll_test.append(n4)
+print question5(1,3)
+# the answer should be 5.
+print ll_test.size
