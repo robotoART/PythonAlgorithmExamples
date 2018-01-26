@@ -25,3 +25,8 @@ Also created a helper function to retrieve the LCA from the BST.
 This solution is of the efficiency of about O(logn)
 
 Question 5:
+Solved with a LinkedList() class helper to create a LinkedList objects containing all Nodes.
+The solution function, question5(ll, m), uses the mathematical strategy of two pointer.
+One pointer is set ahead of the other by the value of m-1.
+Then the leading and trailing pointers move together untill the leading finds reaches the end of the LinkedList.
+An efficiency of O(n) is expected from this solution.

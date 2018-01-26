@@ -386,33 +386,38 @@ class LinkedList(object):
             self.last = new_element
         else:
             self.head = new_element
-            self.last = new_element
-                    
-    def get_from_end(self, m_position):
-        pt_answer = self.head
-        pt_end = self.head
-        pt_counter = 0
-        if self.head is not None:
-            while pt_counter < m_position:
-                if pt_end is None:
-                    print "The integer entered is larger than qty. of nodes."
-                    print "Please try again with a smaller integer."
-                pt_end = pt_end.next
-                pt_counter += 1
-        while pt_end is not None:
-            pt_end = pt_end.next
-            pt_answer = pt_answer.next
-        return pt_answer
+            self.last = new_element        
 
 ### End of Q5 Helpers
 
 def question5(ll, m):
-    m_data = ll_test.get_from_end(m).data
-    return m_data
+    if not isinstance(ll, Node):
+        print "Please enter a Node class object type for the first input."
+        return
+    if type(m) is not int:
+        print "Please enter whole integer format for position."
+        return
+    m_data = ll
+    pt_end = ll
+    pt_counter = 0
+    if ll is not None:
+        while pt_counter < m:
+            if pt_end is None:
+                print "The integer entered is larger than qty. of nodes."
+                print "Please try again with a smaller integer."
+            pt_end = pt_end.next
+            pt_counter += 1
+    while pt_end is not None:
+        pt_end = pt_end.next
+        m_data = m_data.next
+    if type(m_data.data) is int:
+        return m_data.data
+    else:
+        print "Please check that Node values are of integer type only"
+        return
 
 print "\n #5"
 print "question5(test1):"
-# Test 1:
 # create Nodes
 n1 = Node(1)
 n2 = Node(2)
@@ -427,4 +432,34 @@ ll_test.append(n5)
 ll_test.append(n3)
 ll_test.append(n4)
 print question5(ll_test.head,3)
-# the answer should be 5.
+# should print the integer 5.
+
+print "question5(test2):"
+# create Nodes
+n1 = Node("1")
+n2 = Node("")
+n3 = Node("")
+n4 = Node("")
+n5 = Node("")
+# set first node, also know as the 'head', of linked list
+ll_test = LinkedList(n1)
+# append remaining nodes to linked list
+ll_test.append(n2)
+ll_test.append(n5)
+ll_test.append(n3)
+ll_test.append(n4)
+print question5(ll_test.head,3)
+# should print the error message, 
+# "Please check that Node values are of integer type only."
+
+print "question5(test3):"
+# edge case for ll type as None
+print question5(None,3)
+# should print the error message, 
+# "Please check that Node values are of integer type only."
+
+print "question5(test4):"
+# edge case for m type as None
+print question5(ll_test.head,None)
+# should print the error message, 
+# "Please enter whole integer format for position."
