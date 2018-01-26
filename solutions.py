@@ -372,8 +372,8 @@ class Node(object):
 
 # Helper class to create a linked list
 class LinkedList(object):
-    def __init__(self):
-        self.head = None
+    def __init__(self, head=None):
+        self.head = head
         self.last = None
         return
         
@@ -387,69 +387,44 @@ class LinkedList(object):
         else:
             self.head = new_element
             self.last = new_element
-        
-    def get_position(self, position):
-        counter = 1
-        current = self.head
-        if position < 1:
-            return None
-        while current and counter <= position:
-            if counter == position:
-                return current
-            current = current.next
-            counter += 1
-        return None
-    
-    # Function to get how many nodes are in the linked list
-    def size(self):
-        qty = 0
-        current = self.head
-        while current is not None:
-            qty += 1
-            current = current.next
-        return qty
-        
-    def insert(self, new_element, position):
-        counter = 1
-        current = self.head
-        if position > 1:
-            while current and counter < position:
-                if counter == position - 1:
-                    new_element.next = current.next
-                    current.next = new_element
-                current = current.next
-                counter += 1
-        elif position == 1:
-            new_element.next = self.head
-            self.head = new_element
-        
-    # Function to get data of mth element from the end
-#    def get_from_end(self, position):
-#        current = self.head
-#        while 
+                    
+    def get_from_end(self, m_position):
+        pt_answer = self.head
+        pt_end = self.head
+        pt_counter = 0
+        if self.head is not None:
+            while pt_counter < m_position:
+                if pt_end is None:
+                    print "The integer entered is larger than qty. of nodes."
+                    print "Please try again with a smaller integer."
+                pt_end = pt_end.next
+                pt_counter += 1
+        while pt_end is not None:
+            pt_end = pt_end.next
+            pt_answer = pt_answer.next
+        return pt_answer
 
-# Test Nodes
+### End of Q5 Helpers
+
+def question5(ll, m):
+    m_data = ll_test.get_from_end(m).data
+    return m_data
+
+print "\n #5"
+print "question5(test1):"
+# Test 1:
+# create Nodes
 n1 = Node(1)
 n2 = Node(2)
 n3 = Node(3)
 n4 = Node(4)
 n5 = Node(5)
-
-### End of Q5 Helpers
-
-def question5(ll, m):
-    
-#    m_postition = ll_test.get_position(ll.data)
-    return
-
-print "\n #5"
-print "question5(test1):"
-# Test 1:
+# set first node, also know as the 'head', of linked list
 ll_test = LinkedList(n1)
+# append remaining nodes to linked list
 ll_test.append(n2)
 ll_test.append(n5)
 ll_test.append(n3)
 ll_test.append(n4)
-print question5(1,3)
+print question5(ll_test.head,3)
 # the answer should be 5.
-print ll_test.size
