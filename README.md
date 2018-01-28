@@ -4,7 +4,7 @@ by robotoART
 ### Objective
 Present some fun and challenging Python algorithmic problems with solutions.
 
-All code is written in **Python 2.7** unless noted otherwise. The code solutions are in the [solutions.py file](https://github.com/robotoART/PythonAlgorithmExamples/blob/master/solutions.py).
+All code is written in **Python 2.7** unless noted otherwise. The code is in the [solutions.py file](https://github.com/robotoART/PythonAlgorithmExamples/blob/master/solutions.py) and the explanations of the algorithm are in the [explanations.txt file](https://github.com/robotoART/PythonAlgorithmExamples/blob/master/explanations.txt).
 
 ## Challenges
 

@@ -2,7 +2,7 @@
 Created on Sun Jan 14 19:29:11 2018
 
 @author: Alberto Rosario
-Udacity Technical Interview Practice explanations
+Explanations
 """
 
 Question 1:
